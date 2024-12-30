@@ -14,7 +14,6 @@ dependencies:
   flutter_colorpicker: 1.1.0
   google_fonts: 6.2.1
   flutter_staggered_animations: 1.1.1
-  flutter_web_image_picker: 4.0.0
 
 dev_dependencies:
   flutter_test:
