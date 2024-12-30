@@ -78,6 +78,7 @@ class _CreateNoteState extends State<CreateOrEditNote> {
               style: const TextStyle(fontSize: 28, color: Colors.black),
               maxLines: null,
               keyboardType: TextInputType.multiline,
+              textInputAction: TextInputAction.done,
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: "New Title",
@@ -93,6 +94,7 @@ class _CreateNoteState extends State<CreateOrEditNote> {
               style: const TextStyle(fontSize: 18, color: Colors.black),
               maxLines: null,
               keyboardType: TextInputType.multiline,
+              textInputAction: TextInputAction.done,
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: "New Content",
