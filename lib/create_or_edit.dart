@@ -17,13 +17,14 @@ class CreateOrEditNote extends StatefulWidget {
 
 class _CreateNoteState extends State<CreateOrEditNote> {
   static const double bottomMenuIconSize = 35;
+  late FocusNode textFocusNode;
   late TextEditingController titleController;
   late TextEditingController contentController;
   late TextEditingController tagController;
   late List<String> tags;
   late List<Map<String, dynamic>> checkboxList;
   final ImagePicker _picker = ImagePicker();
-  final bool _isEditing = false;
+  bool _isEditing = false;
   Uint8List? _imageBytes;
   Color noteColor = Colors.white;
 
@@ -36,6 +37,22 @@ class _CreateNoteState extends State<CreateOrEditNote> {
     tags = widget.note?.tags ?? [];
     checkboxList = widget.note?.checkboxList ?? [];
     _imageBytes = widget.note?.imageBytes;
+
+    textFocusNode = FocusNode();
+    textFocusNode.addListener(_onFocusChange);
+  }
+
+  @override
+  void dispose() {
+    textFocusNode.removeListener(_onFocusChange);
+    textFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _onFocusChange() {
+    setState(() {
+      _isEditing = textFocusNode.hasFocus;
+    });
   }
 
   @override
@@ -78,6 +95,7 @@ class _CreateNoteState extends State<CreateOrEditNote> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
+              focusNode: textFocusNode,
               controller: titleController,
               style: const TextStyle(fontSize: 28, color: Colors.black),
               maxLines: null,
@@ -90,6 +108,7 @@ class _CreateNoteState extends State<CreateOrEditNote> {
             ),
             const SizedBox(height: 10),
             TextField(
+              focusNode: textFocusNode,
               controller: contentController,
               style: const TextStyle(fontSize: 18, color: Colors.black),
               maxLines: null,
@@ -116,6 +135,7 @@ class _CreateNoteState extends State<CreateOrEditNote> {
                   ),
                   Expanded(
                     child: TextFormField(
+                      focusNode: textFocusNode,
                       initialValue: checkbox['text'],
                       onChanged: (value) {
                         setState(() {
