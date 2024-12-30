@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'note_object.dart';
 
@@ -23,7 +23,7 @@ class _CreateNoteState extends State<CreateOrEditNote> {
   late List<String> tags;
   late List<Map<String, dynamic>> checkboxList;
   final ImagePicker _picker = ImagePicker();
-  String? _imagePath;
+  Uint8List? _imageBytes;
   Color noteColor = Colors.white;
 
   @override
@@ -34,7 +34,7 @@ class _CreateNoteState extends State<CreateOrEditNote> {
     tagController = TextEditingController();
     tags = widget.note?.tags ?? [];
     checkboxList = widget.note?.checkboxList ?? [];
-    _imagePath = widget.note?.imagePath;
+    _imageBytes = widget.note?.imageBytes;
   }
 
   @override
@@ -226,14 +226,14 @@ class _CreateNoteState extends State<CreateOrEditNote> {
   void _saveNote() async {
     if (titleController.text.isNotEmpty ||
         contentController.text.isNotEmpty ||
-        _imagePath != null ||
+        _imageBytes != null ||
         checkboxList.isNotEmpty) {
       final note = Note(
         content: contentController.text,
         title: titleController.text,
         tags: tags,
         checkboxList: checkboxList,
-        imagePath: _imagePath,
+        imageBytes: _imageBytes,
         color: noteColor,
         createDate: widget.note?.createDate ?? DateTime.now(),
       );
@@ -293,8 +293,9 @@ class _CreateNoteState extends State<CreateOrEditNote> {
     final XFile? pickedFile =
         await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
       setState(() {
-        _imagePath = pickedFile.path;
+        _imageBytes = bytes;
       });
     }
   }
@@ -330,22 +331,13 @@ class _CreateNoteState extends State<CreateOrEditNote> {
   }
 
   Widget _buildImageWidget() {
-    if (_imagePath != null) {
-      if (_imagePath!.startsWith('assets/')) {
-        return Image.asset(
-          _imagePath!,
-          width: 300,
-          height: 300,
-          fit: BoxFit.contain,
-        );
-      } else {
-        return Image.file(
-          File(_imagePath!),
-          width: 300,
-          height: 300,
-          fit: BoxFit.contain,
-        );
-      }
+    if (_imageBytes != null) {
+      return Image.memory(
+        _imageBytes!,
+        width: 200,
+        height: 200,
+        fit: BoxFit.contain,
+      );
     }
     return const SizedBox.shrink();
   }

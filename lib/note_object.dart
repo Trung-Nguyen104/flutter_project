@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
+import 'dart:typed_data';
 
 class Note {
   String title;
   String content;
   List<String> tags;
   List<Map<String, dynamic>> checkboxList;
-  String? imagePath;
+  Uint8List? imageBytes;
   Color color;
   bool isPin;
   DateTime createDate;
@@ -17,7 +17,7 @@ class Note {
     required this.tags,
     required this.checkboxList,
     required this.createDate,
-    this.imagePath,
+    this.imageBytes,
     this.color = Colors.white,
     this.isPin = false,
   });
@@ -160,22 +160,13 @@ class NoteWidget extends StatelessWidget {
   }
 
   Widget _buildImageGridWidget() {
-    if (note.imagePath != null && note.imagePath!.isNotEmpty) {
-      if (note.imagePath!.startsWith('assets/')) {
-        return Image.asset(
-          note.imagePath!,
-          width: 200,
-          height: 200,
-          fit: BoxFit.contain,
-        );
-      } else {
-        return Image.file(
-          File(note.imagePath!),
-          width: 200,
-          height: 200,
-          fit: BoxFit.contain,
-        );
-      }
+    if (note.imageBytes != null) {
+      return Image.memory(
+        note.imageBytes!,
+        width: 200,
+        height: 200,
+        fit: BoxFit.contain,
+      );
     }
     return const SizedBox.shrink();
   }
@@ -185,7 +176,7 @@ class NoteWidget extends StatelessWidget {
   }
 
   Widget _showImageOnList() {
-    if (note.imagePath != null && note.imagePath!.isNotEmpty) {
+    if (note.imageBytes != null && note.imageBytes!.isNotEmpty) {
       return const Text(
         "(Image)",
         style: TextStyle(

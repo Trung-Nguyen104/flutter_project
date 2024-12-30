@@ -468,20 +468,19 @@ class MyHomePageStateView extends State<MyHomePage>
               "This is the content of the note. It can be a bit longer to test ellipsis.",
           tags: ["Work", "Personal", "Important"],
           createDate: DateTime.parse("2024-02-05"),
-          checkboxList: List.empty()),
+          checkboxList: []),
       Note(
           title: "Sample Note",
           content: "This is short Note.",
           tags: ["Work", "Personal", "Important"],
           createDate: DateTime.parse("2024-12-09"),
-          checkboxList: List.empty()),
+          checkboxList: []),
       Note(
         title: "Example Note with Image",
         content: "This is an example note with an image from assets.",
         tags: ["example", "image"],
         createDate: DateTime.parse("2024-27-12"),
         checkboxList: [],
-        imagePath: 'assets/tphcm.jpg',
       )
     ];
   }
