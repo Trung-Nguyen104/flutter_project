@@ -41,49 +41,66 @@ class MyHomePageStateView extends State<MyHomePage>
   Key _gridKey = UniqueKey();
   Key _listKey = UniqueKey();
 
-  void _saveNote(Note note) async {
+  Future<void> _saveNote(Note note) async {
     setState(() {
       _noteList.add(note);
-      _updateAllTags(note.tags);
     });
+    await updateAllNotes();
   }
 
-  void _updateAllTags(List<String> newTags) {
-    setState(() {
-      for (var tag in newTags) {
-        if (!_allTags.contains(tag)) {
-          _allTags.add(tag);
-        }
-      }
-    });
-  }
-
-  void _updateNoteAt(int index, Note updatedNote) async {
+  Future<void> _updateNoteAt(int index, Note updatedNote) async {
     setState(() {
       _noteList[index] = updatedNote;
-      _updateAllTags(updatedNote.tags);
-      _filterNotes();
     });
+    await updateAllNotes();
   }
 
-  void _deleteNoteAt(int index) {
+  Future<void> _deleteNoteAt(int index) async {
     setState(() {
       _noteList.removeAt(index);
     });
+    await updateAllNotes();
   }
 
-  void _initAllTags() {
-    _allTags = [];
+  void _updateAllTags() {
+    Set<String> uniqueTags = {};
     for (var note in _noteList) {
-      _updateAllTags(note.tags);
+      uniqueTags.addAll(note.tags);
     }
+    setState(() {
+      _allTags = uniqueTags.toList();
+    });
+  }
+
+  void _filterNotes() {
+    setState(() {
+      _filteredNoteList = _noteList.where((note) {
+        bool matchesSearch = note.title
+                .toLowerCase()
+                .contains(_searchController.text.toLowerCase()) ||
+            note.content
+                .toLowerCase()
+                .contains(_searchController.text.toLowerCase());
+        bool matchesTags = _selectedTags.isEmpty ||
+            _selectedTags.any((tag) => note.tags.contains(tag));
+        return matchesSearch && matchesTags;
+      }).toList();
+    });
+  }
+
+  Future<void> updateAllNotes() async {
+    setState(() {
+      _noteList = List.from(_noteList);
+      _updateAllTags();
+      _filterNotes();
+    });
   }
 
   @override
   void initState() {
     super.initState();
     _initObjectList();
-    _initAllTags();
+    _updateAllTags();
     _filteredNoteList = _noteList;
     _searchController.addListener(_filterNotes);
 
@@ -103,22 +120,6 @@ class MyHomePageStateView extends State<MyHomePage>
     _controller.dispose();
     _searchController.dispose();
     super.dispose();
-  }
-
-  void _filterNotes() {
-    setState(() {
-      _filteredNoteList = _noteList.where((note) {
-        bool matchesSearch = note.title
-                .toLowerCase()
-                .contains(_searchController.text.toLowerCase()) ||
-            note.content
-                .toLowerCase()
-                .contains(_searchController.text.toLowerCase());
-        bool matchesTags = _selectedTags.isEmpty ||
-            _selectedTags.any((tag) => note.tags.contains(tag));
-        return matchesSearch && matchesTags;
-      }).toList();
-    });
   }
 
   @override
@@ -359,7 +360,7 @@ class MyHomePageStateView extends State<MyHomePage>
                   child: NoteWidget(
                     note: _filteredNoteList[index],
                     isGrid: false,
-                    onDelete: () => _deleteNoteAt(index),
+                    onDelete: () async => _deleteNoteAt(index),
                     onEdit: () {
                       Navigator.push(
                         context,
@@ -437,7 +438,8 @@ class MyHomePageStateView extends State<MyHomePage>
                     Navigator.pop(context); // Close the drawer
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => VersionPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const VersionPage()),
                     );
                   },
                 ),
