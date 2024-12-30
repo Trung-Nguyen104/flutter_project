@@ -83,7 +83,7 @@ class _CreateNoteState extends State<CreateOrEditNote> {
                 hintText: "New Title",
                 hintStyle: TextStyle(color: Colors.grey),
               ),
-              onEditingComplete: () {
+              onSubmitted: (value) {
                 FocusScope.of(context).unfocus();
               },
             ),
@@ -98,7 +98,7 @@ class _CreateNoteState extends State<CreateOrEditNote> {
                 hintText: "New Content",
                 hintStyle: TextStyle(color: Colors.grey),
               ),
-              onEditingComplete: () {
+              onSubmitted: (value) {
                 FocusScope.of(context).unfocus();
               },
             ),
