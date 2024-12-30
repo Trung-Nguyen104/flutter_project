@@ -67,104 +67,109 @@ class _CreateNoteState extends State<CreateOrEditNote> {
           )
         ],
       ),
-      body: SingleChildScrollView(
-          child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: titleController,
-              style: const TextStyle(fontSize: 28, color: Colors.black),
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                hintText: "New Title",
-                hintStyle: TextStyle(color: Colors.grey),
+      body: GestureDetector(
+        child: SingleChildScrollView(
+            child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                textInputAction: TextInputAction.done,
+                controller: titleController,
+                style: const TextStyle(fontSize: 28, color: Colors.black),
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "New Title",
+                  hintStyle: TextStyle(color: Colors.grey),
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: contentController,
-              style: const TextStyle(fontSize: 18, color: Colors.black),
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                hintText: "New Content",
-                hintStyle: TextStyle(color: Colors.grey),
+              const SizedBox(height: 10),
+              TextField(
+                textInputAction: TextInputAction.done,
+                controller: contentController,
+                style: const TextStyle(fontSize: 18, color: Colors.black),
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "New Content",
+                  hintStyle: TextStyle(color: Colors.grey),
+                ),
               ),
-            ),
-            _buildImageWidget(),
-            ...checkboxList.asMap().entries.map((entry) {
-              int index = entry.key;
-              Map<String, dynamic> checkbox = entry.value;
-              return Row(
-                children: [
-                  Checkbox(
-                    value: checkbox['checked'],
-                    onChanged: (value) {
-                      setState(() {
-                        checkboxList[index]['checked'] = value;
-                      });
-                    },
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      initialValue: checkbox['text'],
+              _buildImageWidget(),
+              ...checkboxList.asMap().entries.map((entry) {
+                int index = entry.key;
+                Map<String, dynamic> checkbox = entry.value;
+                return Row(
+                  children: [
+                    Checkbox(
+                      value: checkbox['checked'],
                       onChanged: (value) {
                         setState(() {
-                          checkboxList[index]['text'] = value;
+                          checkboxList[index]['checked'] = value;
                         });
                       },
-                      style: const TextStyle(color: Colors.black),
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "New task",
-                        hintStyle: TextStyle(color: Colors.grey),
+                    ),
+                    Expanded(
+                      child: TextFormField(
+                        initialValue: checkbox['text'],
+                        onChanged: (value) {
+                          setState(() {
+                            checkboxList[index]['text'] = value;
+                          });
+                        },
+                        style: const TextStyle(color: Colors.black),
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "New task",
+                          hintStyle: TextStyle(color: Colors.grey),
+                        ),
                       ),
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.grey),
-                    onPressed: () {
-                      setState(() {
-                        checkboxList.removeAt(index);
-                      });
-                    },
-                  ),
-                ],
-              );
-            }),
-            const SizedBox(height: 20),
-            Wrap(
-              spacing: 8.0,
-              runSpacing: 4.0,
-              children: tags
-                  .map(
-                    (tag) => Chip(
-                      label: Text(tag),
-                      labelStyle: const TextStyle(color: Colors.grey),
-                      backgroundColor: const Color.fromARGB(255, 255, 232, 147),
-                      deleteIconColor: Colors.grey,
-                      padding: const EdgeInsets.all(0),
-                      side: BorderSide.none,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      onDeleted: () {
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.grey),
+                      onPressed: () {
                         setState(() {
-                          tags.remove(tag);
+                          checkboxList.removeAt(index);
                         });
                       },
                     ),
-                  )
-                  .toList(),
-            ),
-          ],
-        ),
-      )),
+                  ],
+                );
+              }),
+              const SizedBox(height: 20),
+              Wrap(
+                spacing: 8.0,
+                runSpacing: 4.0,
+                children: tags
+                    .map(
+                      (tag) => Chip(
+                        label: Text(tag),
+                        labelStyle: const TextStyle(color: Colors.grey),
+                        backgroundColor:
+                            const Color.fromARGB(255, 255, 232, 147),
+                        deleteIconColor: Colors.grey,
+                        padding: const EdgeInsets.all(0),
+                        side: BorderSide.none,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        onDeleted: () {
+                          setState(() {
+                            tags.remove(tag);
+                          });
+                        },
+                      ),
+                    )
+                    .toList(),
+              ),
+            ],
+          ),
+        )),
+      ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: noteColor,
