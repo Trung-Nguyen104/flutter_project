@@ -38,6 +38,7 @@ class _CreateNoteState extends State<CreateOrEditNote> {
     tags = widget.note?.tags ?? [];
     checkboxList = widget.note?.checkboxList ?? [];
     _imageBytes = widget.note?.imageBytes;
+    noteColor = widget.note?.color ?? Colors.white;
 
     titleFocusNode = FocusNode();
     contentFocusNode = FocusNode();
