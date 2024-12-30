@@ -23,6 +23,7 @@ class _CreateNoteState extends State<CreateOrEditNote> {
   late List<String> tags;
   late List<Map<String, dynamic>> checkboxList;
   final ImagePicker _picker = ImagePicker();
+  final bool _isEditing = false;
   Uint8List? _imageBytes;
   Color noteColor = Colors.white;
 
@@ -50,21 +51,24 @@ class _CreateNoteState extends State<CreateOrEditNote> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20),
-            child: GestureDetector(
-              onTap: () {
-                _saveNote();
+            child: TextButton(
+              onPressed: () {
+                if (_isEditing) {
+                  FocusScope.of(context).unfocus();
+                } else {
+                  _saveNote();
+                }
               },
-              child: const Text(
-                "Done",
-                style: TextStyle(
+              child: Text(
+                _isEditing ? "Done" : "Save",
+                style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
-                  fontSize: 22,
+                  fontSize: 23,
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
-          )
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -78,15 +82,11 @@ class _CreateNoteState extends State<CreateOrEditNote> {
               style: const TextStyle(fontSize: 28, color: Colors.black),
               maxLines: null,
               keyboardType: TextInputType.multiline,
-              textInputAction: TextInputAction.done,
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: "New Title",
                 hintStyle: TextStyle(color: Colors.grey),
               ),
-              onSubmitted: (value) {
-                FocusScope.of(context).unfocus();
-              },
             ),
             const SizedBox(height: 10),
             TextField(
@@ -94,15 +94,11 @@ class _CreateNoteState extends State<CreateOrEditNote> {
               style: const TextStyle(fontSize: 18, color: Colors.black),
               maxLines: null,
               keyboardType: TextInputType.multiline,
-              textInputAction: TextInputAction.done,
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: "New Content",
                 hintStyle: TextStyle(color: Colors.grey),
               ),
-              onSubmitted: (value) {
-                FocusScope.of(context).unfocus();
-              },
             ),
             _buildImageWidget(),
             ...checkboxList.asMap().entries.map((entry) {
