@@ -73,7 +73,7 @@ class _CreateNoteState extends State<CreateOrEditNote> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextFormField(
+            TextField(
               controller: titleController,
               style: const TextStyle(fontSize: 28, color: Colors.black),
               maxLines: null,
@@ -85,7 +85,7 @@ class _CreateNoteState extends State<CreateOrEditNote> {
               ),
             ),
             const SizedBox(height: 10),
-            TextFormField(
+            TextField(
               controller: contentController,
               style: const TextStyle(fontSize: 18, color: Colors.black),
               maxLines: null,
