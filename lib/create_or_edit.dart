@@ -332,13 +332,53 @@ class _CreateNoteState extends State<CreateOrEditNote> {
 
   Widget _buildImageWidget() {
     if (_imageBytes != null) {
-      return Image.memory(
-        _imageBytes!,
-        width: 200,
-        height: 200,
-        fit: BoxFit.contain,
+      return Stack(
+        children: [
+          Container(
+            constraints: const BoxConstraints(
+                maxHeight: 500, maxWidth: 500 // Giới hạn chiều cao tối đa
+                ),
+            child: Image.memory(
+              _imageBytes!,
+              fit: BoxFit.contain,
+            ),
+          ),
+          Positioned(
+            top: 0,
+            right: 0,
+            child: GestureDetector(
+              onTap: _deleteImage,
+              child: Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.close,
+                  color: Colors.black,
+                  size: 20,
+                ),
+              ),
+            ),
+          ),
+        ],
       );
     }
     return const SizedBox.shrink();
+  }
+
+  void _deleteImage() {
+    setState(() {
+      _imageBytes = null;
+    });
   }
 }

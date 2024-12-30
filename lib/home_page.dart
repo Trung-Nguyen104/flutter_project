@@ -399,13 +399,13 @@ class MyHomePageStateView extends State<MyHomePage>
               ],
             ),
             height: MediaQuery.of(context).size.height / 7,
+            padding: const EdgeInsets.only(left: 20),
             alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.fromLTRB(20, 70, 0, 20),
             child: const Text(
               'Setting',
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 24,
+                fontSize: 26,
                 fontWeight: FontWeight.bold,
               ),
             ),
