@@ -19,7 +19,6 @@ class _CreateNoteState extends State<CreateOrEditNote> {
   static const double bottomMenuIconSize = 35;
   late FocusNode titleFocusNode;
   late FocusNode contentFocusNode;
-  late FocusNode taskFocusNode;
   late TextEditingController titleController;
   late TextEditingController contentController;
   late TextEditingController tagController;
@@ -42,28 +41,22 @@ class _CreateNoteState extends State<CreateOrEditNote> {
 
     titleFocusNode = FocusNode();
     contentFocusNode = FocusNode();
-    taskFocusNode = FocusNode();
     titleFocusNode.addListener(_onFocusChange);
     contentFocusNode.addListener(_onFocusChange);
-    taskFocusNode.addListener(_onFocusChange);
   }
 
   @override
   void dispose() {
     titleFocusNode.removeListener(_onFocusChange);
     contentFocusNode.removeListener(_onFocusChange);
-    taskFocusNode.removeListener(_onFocusChange);
     titleFocusNode.dispose();
     contentFocusNode.dispose();
-    taskFocusNode.dispose();
     super.dispose();
   }
 
   void _onFocusChange() {
     setState(() {
-      _isEditing = titleFocusNode.hasFocus ||
-          contentFocusNode.hasFocus ||
-          taskFocusNode.hasFocus;
+      _isEditing = titleFocusNode.hasFocus || contentFocusNode.hasFocus;
     });
   }
 
@@ -147,7 +140,6 @@ class _CreateNoteState extends State<CreateOrEditNote> {
                   ),
                   Expanded(
                     child: TextFormField(
-                      focusNode: taskFocusNode,
                       initialValue: checkbox['text'],
                       onChanged: (value) {
                         setState(() {

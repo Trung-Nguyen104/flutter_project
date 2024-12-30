@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'note_object.dart';
 import 'create_or_edit.dart';
+import 'version_page.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -431,8 +432,14 @@ class MyHomePageStateView extends State<MyHomePage>
                 ),
                 ListTile(
                   leading: const Icon(Icons.settings, color: Colors.black),
-                  title: const Text('version 1.1.2'),
-                  onTap: () {},
+                  title: const Text('Version'),
+                  onTap: () {
+                    Navigator.pop(context); // Close the drawer
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => VersionPage()),
+                    );
+                  },
                 ),
               ],
             ),
