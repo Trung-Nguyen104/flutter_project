@@ -431,7 +431,7 @@ class MyHomePageStateView extends State<MyHomePage>
                 ),
                 ListTile(
                   leading: const Icon(Icons.settings, color: Colors.black),
-                  title: const Text('version 1.1.1'),
+                  title: const Text('version 1.1.2'),
                   onTap: () {},
                 ),
               ],

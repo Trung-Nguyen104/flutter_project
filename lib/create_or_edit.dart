@@ -17,7 +17,9 @@ class CreateOrEditNote extends StatefulWidget {
 
 class _CreateNoteState extends State<CreateOrEditNote> {
   static const double bottomMenuIconSize = 35;
-  late FocusNode textFocusNode;
+  late FocusNode titleFocusNode;
+  late FocusNode contentFocusNode;
+  late FocusNode taskFocusNode;
   late TextEditingController titleController;
   late TextEditingController contentController;
   late TextEditingController tagController;
@@ -38,20 +40,30 @@ class _CreateNoteState extends State<CreateOrEditNote> {
     checkboxList = widget.note?.checkboxList ?? [];
     _imageBytes = widget.note?.imageBytes;
 
-    textFocusNode = FocusNode();
-    textFocusNode.addListener(_onFocusChange);
+    titleFocusNode = FocusNode();
+    contentFocusNode = FocusNode();
+    taskFocusNode = FocusNode();
+    titleFocusNode.addListener(_onFocusChange);
+    contentFocusNode.addListener(_onFocusChange);
+    taskFocusNode.addListener(_onFocusChange);
   }
 
   @override
   void dispose() {
-    textFocusNode.removeListener(_onFocusChange);
-    textFocusNode.dispose();
+    titleFocusNode.removeListener(_onFocusChange);
+    contentFocusNode.removeListener(_onFocusChange);
+    taskFocusNode.removeListener(_onFocusChange);
+    titleFocusNode.dispose();
+    contentFocusNode.dispose();
+    taskFocusNode.dispose();
     super.dispose();
   }
 
   void _onFocusChange() {
     setState(() {
-      _isEditing = textFocusNode.hasFocus;
+      _isEditing = titleFocusNode.hasFocus ||
+          contentFocusNode.hasFocus ||
+          taskFocusNode.hasFocus;
     });
   }
 
@@ -95,7 +107,7 @@ class _CreateNoteState extends State<CreateOrEditNote> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
-              focusNode: textFocusNode,
+              focusNode: titleFocusNode,
               controller: titleController,
               style: const TextStyle(fontSize: 28, color: Colors.black),
               maxLines: null,
@@ -108,7 +120,7 @@ class _CreateNoteState extends State<CreateOrEditNote> {
             ),
             const SizedBox(height: 10),
             TextField(
-              focusNode: textFocusNode,
+              focusNode: contentFocusNode,
               controller: contentController,
               style: const TextStyle(fontSize: 18, color: Colors.black),
               maxLines: null,
@@ -135,7 +147,7 @@ class _CreateNoteState extends State<CreateOrEditNote> {
                   ),
                   Expanded(
                     child: TextFormField(
-                      focusNode: textFocusNode,
+                      focusNode: taskFocusNode,
                       initialValue: checkbox['text'],
                       onChanged: (value) {
                         setState(() {
